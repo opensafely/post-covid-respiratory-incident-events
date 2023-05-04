@@ -22,8 +22,8 @@ cohorts <- unique(active_analyses$cohort)
 
 # Determine which outputs are ready --------------------------------------------
 
-success <- readxl::read_excel("C:/Users/hk19914/OneDrive - University of Bristol/Documents - grp-EHR/Projects/post-covid-outcome-tracker.xlsx",
-                               sheet = "respiratory",
+success <- readxl::read_excel("C:/Users/zy21123/OneDrive - University of Bristol/Documents - grp-EHR/Projects/post-covid-outcome-tracker.xlsx",
+                               sheet = "respiratory_incident_events",
                                col_types = c("text", "text", "text", "text", "text",
                                              "text", "text", "text", "text", "text",
                                              "text", "text", "text", "text", "text",
@@ -133,7 +133,7 @@ table2 <- function(cohort){
     comment(glue("Table 2 - {cohort}")),
     action(
       name = glue("table2_{cohort}"),
-      run = "r:latest analysis/table2.R",
+      run = "r:latest analysis/descriptives/table2.R",
       arguments = c(cohort),
       needs = c(as.list(paste0("make_model_input-",table2_names))),
       moderately_sensitive = list(
@@ -306,17 +306,17 @@ actions_list <- splice(
     )
   ),
   
-  # comment("Stage 2 - Missing - Table 1"),
-  # action(
-  #   name = "stage2_missing_table1_all",
-  #   run = "r:latest analysis/descriptives/Stage2_missing_table1.R all",
-  #   needs = list("stage1_data_cleaning_all"),
-  #   moderately_sensitive = list(
-  #     Missing_RangeChecks = glue("output/not-for-review/Check_missing_range_*.csv"),
-  #     DateChecks = glue("output/not-for-review/Check_dates_range_*.csv"),
-  #     Descriptive_Table = glue("output/review/descriptives/Table1_*.csv")
-  #   )
-  # ),
+  comment("Stage 2 - Missing - Table 1"),
+  action(
+    name = "stage2_missing_table1_all",
+    run = "r:latest analysis/descriptives/Stage2_missing_table1.R all",
+    needs = list("stage1_data_cleaning_all"),
+    moderately_sensitive = list(
+      Missing_RangeChecks = glue("output/not-for-review/Check_missing_range_*.csv"),
+      DateChecks = glue("output/not-for-review/Check_dates_range_*.csv"),
+      Descriptive_Table = glue("output/review/descriptives/Table1_*.csv")
+    )
+  ),
 
   comment("Stage 5 - Run models"),
   splice(
@@ -349,20 +349,24 @@ actions_list <- splice(
                   function(x) table2(cohort = x)), 
            recursive = FALSE
     )
-  ),
+  )
+)
 
-  comment("Stage 6 - make model output"),
-  action(
-    name = "make_model_output",
-    run = "r:latest analysis/model/make_model_output.R",
-    needs = as.list(paste0("cox_ipw-",success$name)),
-    moderately_sensitive = list(
-      model_output = glue("output/model_output.csv")
+if(nrow(success)>0){
+  actions_list <- splice(
+    actions_list,
+    
+    comment("Stage 6 - make model output"),
+    action(
+      name = "make_model_output",
+      run = "r:latest analysis/model/make_model_output.R",
+      needs = as.list(paste0("cox_ipw-",success$name)),
+      moderately_sensitive = list(
+        model_output = glue("output/model_output.csv")
+      )
     )
   )
-
-
-)
+}
 
 ## combine everything ----
 project_list <- splice(

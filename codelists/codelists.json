@@ -569,6 +569,18 @@
       "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/hrt_dmd/19196799/",
       "downloaded_at": "2023-01-25 11:32:47.427206Z",
       "sha": "14aff592668a703f02cc68aa54c7ebab0774c62f"
+    },
+    "bristol-pneumonia-snomed.csv": {
+      "id": "bristol/pneumonia-snomed/615d16bb",
+      "url": "https://codelists.opensafely.org/codelist/bristol/pneumonia-snomed/615d16bb/",
+      "downloaded_at": "2023-05-04 09:47:05.228125Z",
+      "sha": "edf877d1effa6128b7afd5061d82e272575041e0"
+    },
+    "bristol-ild-snomed.csv": {
+      "id": "bristol/ild-snomed/2f3e3051",
+      "url": "https://codelists.opensafely.org/codelist/bristol/ild-snomed/2f3e3051/",
+      "downloaded_at": "2023-05-04 09:47:05.616963Z",
+      "sha": "9e2de5190c0081e01bffef1a56aa4431885da94e"
     }
   }
 }
