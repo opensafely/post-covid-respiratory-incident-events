@@ -6850,7 +6850,7 @@ actions:
   ## Table 2 - prevax 
 
   table2_prevax:
-    run: r:latest analysis/table2.R prevax
+    run: r:latest analysis/descriptives/table2.R prevax
     needs:
     - make_model_input-cohort_prevax-main-asthma-no_preexisting
     - make_model_input-cohort_prevax-main-copd-no_preexisting
@@ -6962,7 +6962,7 @@ actions:
   ## Table 2 - unvax 
 
   table2_unvax:
-    run: r:latest analysis/table2.R unvax
+    run: r:latest analysis/descriptives/table2.R unvax
     needs:
     - make_model_input-cohort_unvax-main-asthma-no_preexisting
     - make_model_input-cohort_unvax-main-copd-no_preexisting
@@ -7080,7 +7080,7 @@ actions:
   ## Table 2 - vax 
 
   table2_vax:
-    run: r:latest analysis/table2.R vax
+    run: r:latest analysis/descriptives/table2.R vax
     needs:
     - make_model_input-cohort_vax-main-asthma-no_preexisting
     - make_model_input-cohort_vax-main-copd-no_preexisting
