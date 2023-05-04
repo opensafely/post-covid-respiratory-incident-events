@@ -173,39 +173,6 @@ def generate_common_variables(index_date_variable,exposure_end_date_variable,out
 
 # DEFINE OUTCOMES ------------------------------------------------------
 ## First recording of the outcome in during the study period
-out_date_breathless=patients.with_these_clinical_events(
-    breathlessness_snomed,
-    returning="date",
-    between=[f"{index_date_variable}",f"{outcome_end_date_variable}"],
-    date_format="YYYY-MM-DD",
-    find_first_match_in_period=True,
-    return_expectations={
-        "date": {"earliest": "1900-01-01", "latest" : "today"},
-         "incidence": 0.3}, 
-    ),
-
-out_date_cough=patients.with_these_clinical_events(
-    cough_snomed,
-    returning="date",
-    between=[f"{index_date_variable}",f"{outcome_end_date_variable}"],
-    date_format="YYYY-MM-DD",
-    find_first_match_in_period=True,
-    return_expectations={
-        "date": {"earliest": "1900-01-01", "latest" : "today"},
-        "incidence": 0.3},
-    ),
-
-out_date_urti=patients.with_these_clinical_events(
-    urti_snomed,
-    returning="date",
-    between=[f"{index_date_variable}",f"{outcome_end_date_variable}"],
-    date_format="YYYY-MM-DD",
-    find_first_match_in_period=True,
-    return_expectations={
-        "date": {"earliest": "1900-01-01", "latest" : "today"},
-        "incidence": 0.3},
-    ),
-
 out_date_pneumonia=patients.with_these_clinical_events(
     pneumonia_snomed,
     returning="date",
@@ -217,8 +184,8 @@ out_date_pneumonia=patients.with_these_clinical_events(
         "incidence": 0.3},
     ),
 
-out_date_asthma_exac=patients.with_these_clinical_events(
-    asthma_exacerbation_snomed,
+out_date_asthma=patients.with_these_clinical_events(
+    asthma_snomed,
     returning="date",
     between=[f"{index_date_variable}",f"{outcome_end_date_variable}"],
     date_format="YYYY-MM-DD",
@@ -228,8 +195,8 @@ out_date_asthma_exac=patients.with_these_clinical_events(
         "incidence": 0.3},
     ),
 
-out_date_copd_exac=patients.with_these_clinical_events(
-    copd_exacerbation_snomed,
+out_date_copd=patients.with_these_clinical_events(
+    copd_snomed,
     returning="date",
     between=[f"{index_date_variable}",f"{outcome_end_date_variable}"],
     date_format="YYYY-MM-DD",
@@ -253,7 +220,6 @@ out_date_pulmonary_fibrosis=patients.with_these_clinical_events(
 # DEFINE EXISTING RESPIRATORY CONDITION COHORT ------------------------------------------------------
 ## Asthma diagnosed in the past 2 years 
     sub_bin_asthma_recent_snomed=patients.with_these_clinical_events(
-
         asthma_snomed,
         returning='binary_flag',
         between=[f"{index_date_variable} - 730 days", f"{index_date_variable} - 1 day"],

@@ -465,38 +465,14 @@ asthma_snomed = codelist_from_csv(
 )
 
 ## Respiratory outcomes
-breathlessness_snomed = codelist_from_csv(
-    "codelists/bristol-breathlessness.csv",
-    system="snomed",
-    column="code",
-)
-cough_snomed = codelist_from_csv(
-    "codelists/bristol-cough.csv",
-    system="snomed",
-    column="code",
-)
-urti_snomed = codelist_from_csv(
-    "codelists/bristol-urti.csv",
-    system="snomed",
-    column="code",
-)
 pneumonia_snomed = codelist_from_csv(
-    "codelists/bristol-pneumonia_v2.csv",
+    "codelists/bristol-pneumonia-snomed.csv",
     system="snomed",
     column="code",
 )
-asthma_exacerbation_snomed = codelist_from_csv(
-    "codelists/bristol-asthma-exacerbations.csv",
-    system="snomed",
-    column="code",
-)
-copd_exacerbation_snomed = codelist_from_csv(
-    "codelists/bristol-copd-exacerbations.csv",
-    system="snomed",
-    column="code",
-)
+# asthma and copd snomed codes are above under 'Preexisting respiratory condition' - same codes and variable names to be used for outcomes
 pulmonary_fibrosis_snomed = codelist_from_csv(
-    "codelists/bristol-interstitial-lung-disease-pulmonary-fibrosis.csv",
+    "codelists/bristol-ild-snomed.csv",
     system="snomed",
     column="code",
 )

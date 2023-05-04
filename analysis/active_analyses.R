@@ -66,13 +66,10 @@ cohorts <- c("vax","unvax","prevax")
 
 # Specify outcomes -------------------------------------------------------------
 
-outcomes_runall <- c("out_date_breathless", 
-                      "out_date_cough",
-                      "out_date_urti",
-                      "out_date_pneumonia",
-                      "out_date_asthma_exac",
-                      "out_date_copd_exac",
-                      "out_date_pulmonary_fibrosis")
+outcomes_runall <- c("out_date_pneumonia",
+                     "out_date_asthma",
+                     "out_date_copd",
+                     "out_date_pulmonary_fibrosis")
                       
 
 
@@ -496,7 +493,9 @@ df$name <- paste0("cohort_",df$cohort, "-",
                   gsub("out_date_","",df$outcome), "-", 
                   df$population)
 
-
+# Pre-existing populations only run the outcomes Pneumonia and Pulmonary fibrosis
+# Remove Pre-existing & asthma/copd rows
+df <- df[df$population != "preexisting" | !df$outcome %in% c("out_date_asthma", "out_date_copd"),]
 
 # Check names are unique and save active analyses list -------------------------
 

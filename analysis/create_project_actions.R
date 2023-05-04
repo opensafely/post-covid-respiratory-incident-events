@@ -22,8 +22,8 @@ cohorts <- unique(active_analyses$cohort)
 
 # Determine which outputs are ready --------------------------------------------
 
-success <- readxl::read_excel("C:/Users/hk19914/OneDrive - University of Bristol/Documents - grp-EHR/Projects/post-covid-outcome-tracker.xlsx",
-                               sheet = "respiratory",
+success <- readxl::read_excel("C:/Users/zy21123/OneDrive - University of Bristol/Documents - grp-EHR/Projects/post-covid-outcome-tracker.xlsx",
+                               sheet = "respiratory_incident_events",
                                col_types = c("text", "text", "text", "text", "text",
                                              "text", "text", "text", "text", "text",
                                              "text", "text", "text", "text", "text",
@@ -349,20 +349,24 @@ actions_list <- splice(
                   function(x) table2(cohort = x)), 
            recursive = FALSE
     )
-  ),
+  )
+)
 
-  comment("Stage 6 - make model output"),
-  action(
-    name = "make_model_output",
-    run = "r:latest analysis/model/make_model_output.R",
-    needs = as.list(paste0("cox_ipw-",success$name)),
-    moderately_sensitive = list(
-      model_output = glue("output/model_output.csv")
+if(nrow(success)>0){
+  actions_list <- splice(
+    actions_list,
+    
+    comment("Stage 6 - make model output"),
+    action(
+      name = "make_model_output",
+      run = "r:latest analysis/model/make_model_output.R",
+      needs = as.list(paste0("cox_ipw-",success$name)),
+      moderately_sensitive = list(
+        model_output = glue("output/model_output.csv")
+      )
     )
   )
-
-
-)
+}
 
 ## combine everything ----
 project_list <- splice(
