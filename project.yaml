@@ -166,18 +166,6 @@ actions:
       moderately_sensitive:
         describe_model_input: output/describe-input_unvax_stage1.txt
 
-  ## Stage 2 - Missing - Table 1 
-
-  stage2_missing_table1_all:
-    run: r:latest analysis/descriptives/Stage2_missing_table1.R all
-    needs:
-    - stage1_data_cleaning_all
-    outputs:
-      moderately_sensitive:
-        Missing_RangeChecks: output/not-for-review/Check_missing_range_*.csv
-        DateChecks: output/not-for-review/Check_dates_range_*.csv
-        Descriptive_Table: output/review/descriptives/Table1_*.csv
-
   ## Stage 5 - Run models 
 
   make_model_input-cohort_prevax-main-asthma-no_preexisting:
@@ -6857,6 +6845,139 @@ actions:
     outputs:
       moderately_sensitive:
         model_output: output/model_output-cohort_vax-sub_smoking_never-pulmonary_fibrosis-preexisting.csv
+
+  ## Make Table 1 
+  ## Table 1 - prevax pre_existing_condition TRUE covid_history TRUE 
+
+  table1_prevax_pre_existing_condition_TRUE_covid_history_TRUE:
+    run: r:latest analysis/descriptives/table1.R prevax TRUE TRUE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_prevax_pre_existing_condition_TRUE_covid_history_TRUE.csv
+        table1_rounded: output/review/descriptives/table1_prevax_pre_existing_condition_TRUE_covid_history_TRUE_rounded.csv
+
+  ## Table 1 - prevax pre_existing_condition TRUE covid_history FALSE 
+
+  table1_prevax_pre_existing_condition_TRUE_covid_history_FALSE:
+    run: r:latest analysis/descriptives/table1.R prevax TRUE FALSE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_prevax_pre_existing_condition_TRUE_covid_history_FALSE.csv
+        table1_rounded: output/review/descriptives/table1_prevax_pre_existing_condition_TRUE_covid_history_FALSE_rounded.csv
+
+  ## Table 1 - prevax pre_existing_condition FALSE covid_history TRUE 
+
+  table1_prevax_pre_existing_condition_FALSE_covid_history_TRUE:
+    run: r:latest analysis/descriptives/table1.R prevax FALSE TRUE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_prevax_pre_existing_condition_FALSE_covid_history_TRUE.csv
+        table1_rounded: output/review/descriptives/table1_prevax_pre_existing_condition_FALSE_covid_history_TRUE_rounded.csv
+
+  ## Table 1 - prevax pre_existing_condition FALSE covid_history FALSE 
+
+  table1_prevax_pre_existing_condition_FALSE_covid_history_FALSE:
+    run: r:latest analysis/descriptives/table1.R prevax FALSE FALSE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_prevax_pre_existing_condition_FALSE_covid_history_FALSE.csv
+        table1_rounded: output/review/descriptives/table1_prevax_pre_existing_condition_FALSE_covid_history_FALSE_rounded.csv
+
+  ## Table 1 - unvax pre_existing_condition TRUE covid_history TRUE 
+
+  table1_unvax_pre_existing_condition_TRUE_covid_history_TRUE:
+    run: r:latest analysis/descriptives/table1.R unvax TRUE TRUE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_unvax_pre_existing_condition_TRUE_covid_history_TRUE.csv
+        table1_rounded: output/review/descriptives/table1_unvax_pre_existing_condition_TRUE_covid_history_TRUE_rounded.csv
+
+  ## Table 1 - unvax pre_existing_condition TRUE covid_history FALSE 
+
+  table1_unvax_pre_existing_condition_TRUE_covid_history_FALSE:
+    run: r:latest analysis/descriptives/table1.R unvax TRUE FALSE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_unvax_pre_existing_condition_TRUE_covid_history_FALSE.csv
+        table1_rounded: output/review/descriptives/table1_unvax_pre_existing_condition_TRUE_covid_history_FALSE_rounded.csv
+
+  ## Table 1 - unvax pre_existing_condition FALSE covid_history TRUE 
+
+  table1_unvax_pre_existing_condition_FALSE_covid_history_TRUE:
+    run: r:latest analysis/descriptives/table1.R unvax FALSE TRUE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_unvax_pre_existing_condition_FALSE_covid_history_TRUE.csv
+        table1_rounded: output/review/descriptives/table1_unvax_pre_existing_condition_FALSE_covid_history_TRUE_rounded.csv
+
+  ## Table 1 - unvax pre_existing_condition FALSE covid_history FALSE 
+
+  table1_unvax_pre_existing_condition_FALSE_covid_history_FALSE:
+    run: r:latest analysis/descriptives/table1.R unvax FALSE FALSE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_unvax_pre_existing_condition_FALSE_covid_history_FALSE.csv
+        table1_rounded: output/review/descriptives/table1_unvax_pre_existing_condition_FALSE_covid_history_FALSE_rounded.csv
+
+  ## Table 1 - vax pre_existing_condition TRUE covid_history TRUE 
+
+  table1_vax_pre_existing_condition_TRUE_covid_history_TRUE:
+    run: r:latest analysis/descriptives/table1.R vax TRUE TRUE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_vax_pre_existing_condition_TRUE_covid_history_TRUE.csv
+        table1_rounded: output/review/descriptives/table1_vax_pre_existing_condition_TRUE_covid_history_TRUE_rounded.csv
+
+  ## Table 1 - vax pre_existing_condition TRUE covid_history FALSE 
+
+  table1_vax_pre_existing_condition_TRUE_covid_history_FALSE:
+    run: r:latest analysis/descriptives/table1.R vax TRUE FALSE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_vax_pre_existing_condition_TRUE_covid_history_FALSE.csv
+        table1_rounded: output/review/descriptives/table1_vax_pre_existing_condition_TRUE_covid_history_FALSE_rounded.csv
+
+  ## Table 1 - vax pre_existing_condition FALSE covid_history TRUE 
+
+  table1_vax_pre_existing_condition_FALSE_covid_history_TRUE:
+    run: r:latest analysis/descriptives/table1.R vax FALSE TRUE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_vax_pre_existing_condition_FALSE_covid_history_TRUE.csv
+        table1_rounded: output/review/descriptives/table1_vax_pre_existing_condition_FALSE_covid_history_TRUE_rounded.csv
+
+  ## Table 1 - vax pre_existing_condition FALSE covid_history FALSE 
+
+  table1_vax_pre_existing_condition_FALSE_covid_history_FALSE:
+    run: r:latest analysis/descriptives/table1.R vax FALSE FALSE
+    needs:
+    - stage1_data_cleaning_all
+    outputs:
+      moderately_sensitive:
+        table1: output/review/descriptives/table1_vax_pre_existing_condition_FALSE_covid_history_FALSE.csv
+        table1_rounded: output/review/descriptives/table1_vax_pre_existing_condition_FALSE_covid_history_FALSE_rounded.csv
 
   ## Make Table 2 
   ## Table 2 - prevax 

@@ -123,6 +123,24 @@ convert_comment_actions <-function(yaml.txt){
   )
 }
 
+# Create function to make Table 1 ----------------------------------------------
+
+table1 <- function(cohort, pre_existing_condition, covid_history){
+  splice(
+    comment(glue("Table 1 - {cohort} pre_existing_condition {pre_existing_condition} covid_history {covid_history}")),
+    action(
+      name = glue("table1_{cohort}_pre_existing_condition_{pre_existing_condition}_covid_history_{covid_history}"),
+      run = "r:latest analysis/descriptives/table1.R",
+      arguments = c(cohort,pre_existing_condition,covid_history),
+      needs = list(glue("stage1_data_cleaning_all")),
+      moderately_sensitive = list(
+        table1 = glue("output/review/descriptives/table1_{cohort}_pre_existing_condition_{pre_existing_condition}_covid_history_{covid_history}.csv"),
+        table1_rounded = glue("output/review/descriptives/table1_{cohort}_pre_existing_condition_{pre_existing_condition}_covid_history_{covid_history}_rounded.csv")
+      )
+    )
+  )
+}
+
 # Create function to make Table 2 ----------------------------------------------
 
 table2 <- function(cohort){
@@ -305,18 +323,6 @@ actions_list <- splice(
       describe_model_input = glue("output/describe-input_unvax_stage1.txt")
     )
   ),
-  
-  comment("Stage 2 - Missing - Table 1"),
-  action(
-    name = "stage2_missing_table1_all",
-    run = "r:latest analysis/descriptives/Stage2_missing_table1.R all",
-    needs = list("stage1_data_cleaning_all"),
-    moderately_sensitive = list(
-      Missing_RangeChecks = glue("output/not-for-review/Check_missing_range_*.csv"),
-      DateChecks = glue("output/not-for-review/Check_dates_range_*.csv"),
-      Descriptive_Table = glue("output/review/descriptives/Table1_*.csv")
-    )
-  ),
 
   comment("Stage 5 - Run models"),
   splice(
@@ -342,6 +348,16 @@ actions_list <- splice(
                                                    age_spline = active_analyses$age_spline[x])), recursive = FALSE
     )
   ),
+  
+  comment("Make Table 1"),
+  splice(
+    # over outcomes
+    unlist(lapply(unique(active_analyses$cohort), function(x) 
+      splice(unlist(lapply(c("TRUE","FALSE"), function(y)
+        splice(unlist(lapply(c("TRUE","FALSE"), function(z) table1(cohort = x, pre_existing_condition = y, covid_history = z)),recursive = FALSE))
+        ), recursive = FALSE))
+    ),recursive = FALSE)),
+  
 
   comment("Make Table 2"),
   splice(
