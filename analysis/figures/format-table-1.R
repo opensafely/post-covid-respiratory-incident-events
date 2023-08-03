@@ -1,8 +1,8 @@
-
+# Format Table 1 for manuscript
 
 files <- list.files("C:/Users/zy21123/OneDrive - University of Bristol/Documents - grp-EHR/Projects/post-covid-respiratory/incident-events/results/descriptives", pattern = "table1")
 files <- unique(gsub("table1_prevax_|table1_vax_|table1_unvax_","",files))
-f=files[1]
+
 for (f in files) {
   save_name <- paste0("table-1-",gsub("_rounded.csv","",f))
   
