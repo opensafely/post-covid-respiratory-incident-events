@@ -50,8 +50,8 @@ prevax_start <- "2020-01-01"
 vax_unvax_start<-"2021-06-01"
 study_stop <-"2021-12-14"
 ##Cut points 
-prevax_cuts <- "28;197;365;714"
-vax_unvax_cuts <- "28;197"
+prevax_cuts <- "1;28;197;365;714"
+vax_unvax_cuts <- "1;28;197"
 all_covars <- paste0("cov_cat_ethnicity;cov_cat_deprivation;cov_num_consultation_rate;cov_bin_healthcare_worker;",
                      "cov_cat_smoking_status;cov_bin_carehome_status;cov_bin_obesity;",
                      "cov_bin_history_pneumonia_snomed;cov_bin_history_asthma_snomed;cov_bin_history_pulmonary_fibrosis_snomed;",
