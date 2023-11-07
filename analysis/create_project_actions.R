@@ -16,27 +16,31 @@ defaults_list <- list(
   expectations= list(population_size=10000L)
 )
 
+# Define active analyses -------------------------------------------------------
+
 active_analyses <- read_rds("lib/active_analyses.rds")
 active_analyses <- active_analyses[order(active_analyses$analysis,active_analyses$cohort,active_analyses$outcome),]
+active_analyses <- active_analyses[active_analyses$cohort %in% c("prevax_extf","unvax_extf","vax"),]
 cohorts <- unique(active_analyses$cohort)
 
-# Determine which outputs are ready --------------------------------------------
+# Specify active analyses requiring Stata --------------------------------------
 
-# success <- readxl::read_excel("C:/Users/zy21123/OneDrive - University of Bristol/Documents - grp-EHR/Projects/post-covid-outcome-tracker.xlsx",
-#                                sheet = "respiratory_incident_events",
-#                                col_types = c("text", "text", "text", "text", "text",
-#                                              "text", "text", "text", "text", "text",
-#                                              "text", "text", "text", "text", "text",
-#                                              "text", "text", "text", "text", "text",
-#                                              "text", "skip", "skip"))
-# 
-# success <- tidyr::pivot_longer(success,
-#                                 cols = setdiff(colnames(success),c("outcome","cohort", "population")),
-#                                 names_to = "analysis")
-# 
-# success$name <- paste0("cohort_",success$cohort, "-",success$analysis, "-",success$outcome, "-", success$population)
-# 
-# success <- success[grepl("success",success$value, ignore.case = TRUE),]
+run_stata <- c("cohort_prevax-sub_age_60_79-pneumonia-no_preexisting",
+               "cohort_prevax-sub_covid_hospitalised-pneumonia-preexisting",
+               "cohort_prevax-sub_covid_hospitalised-pneumonia-no_preexisting",
+               "cohort_unvax-sub_age_60_79-pneumonia-no_preexisting",
+               "cohort_unvax-sub_covid_hospitalised-pneumonia-preexisting",
+               "cohort_unvax-sub_covid_hospitalised-pneumonia-no_preexisting",
+               "cohort_unvax-sub_ethnicity_asian-pneumonia-no_preexisting",
+               "cohort_vax-sub_covid_hospitalised-pneumonia-preexisting",
+               "cohort_vax-sub_covid_hospitalised-pneumonia-no_preexisting",
+               "cohort_prevax-sub_ethnicity_mixed-pneumonia-no_preexisting",
+               "cohort_prevax-sub_ethnicity_other-pneumonia-no_preexisting",
+               "cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting")
+
+stata <- active_analyses[active_analyses$name %in% run_stata,]
+stata$save_analysis_ready <- TRUE
+stata$day0 <- grepl("1;",stata$cut_points)
 
 # create action functions ----
 
@@ -162,6 +166,33 @@ table2 <- function(cohort){
   )
 }
 
+# Create function to make Stata models -----------------------------------------
+
+apply_stata_model_function <- function(name, cohort, analysis, ipw, strata, 
+                                       covariate_sex, covariate_age, covariate_other, 
+                                       cox_start, cox_stop, study_start, study_stop,
+                                       cut_points, controls_per_case,
+                                       total_event_threshold, episode_event_threshold,
+                                       covariate_threshold, age_spline, day0){
+  splice(
+    action(
+      name = glue("ready-{name}"),
+      run = glue("cox-ipw:v0.0.27 --df_input=model_input-{name}.rds --ipw={ipw} --exposure=exp_date --outcome=out_date --strata={strata} --covariate_sex={covariate_sex} --covariate_age={covariate_age} --covariate_other={covariate_other} --cox_start={cox_start} --cox_stop={cox_stop} --study_start={study_start} --study_stop={study_stop} --cut_points={cut_points} --controls_per_case={controls_per_case} --total_event_threshold={total_event_threshold} --episode_event_threshold={episode_event_threshold} --covariate_threshold={covariate_threshold} --age_spline={age_spline} --save_analysis_ready=TRUE --run_analysis=FALSE --df_output=model_output-{name}.csv"),
+      needs = list(glue("make_model_input-{name}")),
+      highly_sensitive = list(ready = glue("output/ready-{name}.csv.gz"))
+    ),
+    action(
+      name = glue("stata_cox_ipw-{name}"),
+      run = "stata-mp:latest analysis/cox_model.do",
+      arguments = c(name, day0),
+      needs = c(as.list(glue("ready-{name}"))),
+      moderately_sensitive = list(
+        stata_fup = glue("output/stata_fup-{name}.csv"),
+        stata_model_output = glue("output/stata_model_output-{name}.txt")
+      )
+    )
+  )
+}
 
 ##########################################################
 ## Define and combine all actions into a list of actions #
@@ -349,6 +380,31 @@ actions_list <- splice(
     )
   ),
   
+  splice(
+    unlist(lapply(1:nrow(stata), 
+                  function(x) apply_stata_model_function(name = stata$name[x],
+                                                         cohort = stata$cohort[x],
+                                                         analysis = stata$analysis[x],
+                                                         ipw = stata$ipw[x],
+                                                         strata = stata$strata[x],
+                                                         covariate_sex = stata$covariate_sex[x],
+                                                         covariate_age = stata$covariate_age[x],
+                                                         covariate_other = stata$covariate_other[x],
+                                                         cox_start = stata$cox_start[x],
+                                                         cox_stop = stata$cox_stop[x],
+                                                         study_start = stata$study_start[x],
+                                                         study_stop = stata$study_stop[x],
+                                                         cut_points = stata$cut_points[x],
+                                                         controls_per_case = stata$controls_per_case[x],
+                                                         total_event_threshold = stata$total_event_threshold[x],
+                                                         episode_event_threshold = stata$episode_event_threshold[x],
+                                                         covariate_threshold = stata$covariate_threshold[x],
+                                                         age_spline = stata$age_spline[x],
+                                                         day0 = stata$day0[x])), 
+           recursive = FALSE
+    )
+  ),
+  
   comment("Make Table 1"),
   splice(
     # over outcomes
@@ -365,24 +421,30 @@ actions_list <- splice(
                   function(x) table2(cohort = x)), 
            recursive = FALSE
     )
+  ),
+
+  action(
+    name = "make_model_output",
+    run = "r:latest analysis/make_model_output.R",
+    needs = as.list(paste0("cox_ipw-",
+                           setdiff(active_analyses$name,stata$name))),
+    moderately_sensitive = list(
+      model_output = glue("output/model_output.csv"),
+      model_output_rounded = glue("output/model_output_rounded.csv")
+    )
+  ),
+  
+  action(
+    name = "make_stata_model_output",
+    run = "r:latest analysis/make_stata_model_output.R",
+    needs = as.list(paste0("stata_cox_ipw-",stata$name)),
+    moderately_sensitive = list(
+      stata_model_output = glue("output/stata_model_output.csv"),
+      stata_model_output_rounded = glue("output/stata_model_output_rounded.csv")
+    )
   )
 )
 
-# if(nrow(success)>0){
-#   actions_list <- splice(
-#     actions_list,
-#     
-#     comment("Stage 6 - make model output"),
-#     action(
-#       name = "make_model_output",
-#       run = "r:latest analysis/model/make_model_output.R",
-#       needs = as.list(paste0("cox_ipw-",success$name)),
-#       moderately_sensitive = list(
-#         model_output = glue("output/model_output.csv")
-#       )
-#     )
-#   )
-# }
 
 ## combine everything ----
 project_list <- splice(
