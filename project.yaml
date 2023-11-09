@@ -7719,7 +7719,7 @@ actions:
         table2_rounded: output/table2_vax_rounded.csv
 
   make_model_output:
-    run: r:latest analysis/make_model_output.R
+    run: r:latest analysis/model/make_model_output.R
     needs:
     - cox_ipw-cohort_prevax-main-asthma-no_preexisting
     - cox_ipw-cohort_prevax-main-copd-no_preexisting
@@ -8033,7 +8033,7 @@ actions:
         model_output_rounded: output/model_output_rounded.csv
 
   make_stata_model_output:
-    run: r:latest analysis/make_stata_model_output.R
+    run: r:latest analysis/model/make_stata_model_output.R
     needs:
     - stata_cox_ipw-cohort_prevax-sub_age_60_79-pneumonia-no_preexisting
     - stata_cox_ipw-cohort_unvax-sub_age_60_79-pneumonia-no_preexisting
