@@ -425,7 +425,7 @@ actions_list <- splice(
 
   action(
     name = "make_model_output",
-    run = "r:latest analysis/make_model_output.R",
+    run = "r:latest analysis/model/make_model_output.R",
     needs = as.list(paste0("cox_ipw-",
                            setdiff(active_analyses$name,stata$name))),
     moderately_sensitive = list(
@@ -436,7 +436,7 @@ actions_list <- splice(
   
   action(
     name = "make_stata_model_output",
-    run = "r:latest analysis/make_stata_model_output.R",
+    run = "r:latest analysis/model/make_stata_model_output.R",
     needs = as.list(paste0("stata_cox_ipw-",stata$name)),
     moderately_sensitive = list(
       stata_model_output = glue("output/stata_model_output.csv"),
