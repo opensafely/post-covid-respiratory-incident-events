@@ -8030,7 +8030,7 @@ actions:
     outputs:
       moderately_sensitive:
         model_output: output/model_output.csv
-        model_output_rounded: output/model_output_rounded.csv
+        model_output_midpoint6: output/model_output_midpoint6.csv
 
   make_stata_model_output:
     run: r:latest analysis/model/make_stata_model_output.R
@@ -8050,5 +8050,5 @@ actions:
     outputs:
       moderately_sensitive:
         stata_model_output: output/stata_model_output.csv
-        stata_model_output_rounded: output/stata_model_output_rounded.csv
+        stata_model_output_midpoint6: output/stata_model_output_midpoint6.csv
 

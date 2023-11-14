@@ -42,11 +42,14 @@ stata <- active_analyses[active_analyses$name %in% run_stata,]
 stata$save_analysis_ready <- TRUE
 stata$day0 <- grepl("1;",stata$cut_points)
 
+
 # create action functions ----
 
 ############################
 ## generic action function #
 ############################
+
+
 action <- function(
   name,
   run,
@@ -430,7 +433,7 @@ actions_list <- splice(
                            setdiff(active_analyses$name,stata$name))),
     moderately_sensitive = list(
       model_output = glue("output/model_output.csv"),
-      model_output_rounded = glue("output/model_output_rounded.csv")
+      model_output_midpoint6 = glue("output/model_output_midpoint6.csv")
     )
   ),
   
@@ -440,7 +443,7 @@ actions_list <- splice(
     needs = as.list(paste0("stata_cox_ipw-",stata$name)),
     moderately_sensitive = list(
       stata_model_output = glue("output/stata_model_output.csv"),
-      stata_model_output_rounded = glue("output/stata_model_output_rounded.csv")
+      stata_model_output_midpoint6 = glue("output/stata_model_output_midpoint6.csv")
     )
   )
 )
