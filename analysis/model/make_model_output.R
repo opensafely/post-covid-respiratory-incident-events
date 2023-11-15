@@ -105,9 +105,9 @@ df[,c("N_total","N_exposed","N_events")] <- lapply(df[,c("N_total","N_exposed","
 
 
 df <- dplyr::rename(df,
-                    "N_total" = "N_total_midpoint6",
-                    "N_exposed" = "N_exposed_midpoint6",
-                    "N_events" = "N_events_midpoint6")
+                    "N_total_midpoint6" = "N_total",
+                    "N_exposed_midpoint6" = "N_exposed",
+                    "N_events_midpoint6" = "N_events")
 
 
 # Save model output ------------------------------------------------------------
