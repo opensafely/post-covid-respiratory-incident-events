@@ -7212,30 +7212,6 @@ actions:
         stata_fup: output/stata_fup-cohort_prevax-sub_ethnicity_other-pneumonia-no_preexisting.csv
         stata_model_output: output/stata_model_output-cohort_prevax-sub_ethnicity_other-pneumonia-no_preexisting.txt
 
-  ready-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting:
-    run: cox-ipw:v0.0.27 --df_input=model_input-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting.rds
-      --ipw=TRUE --exposure=exp_date --outcome=out_date --strata=cov_cat_region --covariate_sex=cov_cat_sex
-      --covariate_age=cov_num_age --covariate_other=cov_cat_deprivation;cov_num_consultation_rate;cov_bin_healthcare_worker;cov_cat_smoking_status;cov_bin_carehome_status;cov_bin_obesity;cov_bin_history_pneumonia_snomed;cov_bin_history_asthma_snomed;cov_bin_history_pulmonary_fibrosis_snomed;cov_bin_ami;cov_bin_all_stroke;cov_bin_dementia;cov_bin_liver_disease;cov_bin_chronic_kidney_disease;cov_bin_cancer;cov_bin_hypertension;cov_bin_diabetes
-      --cox_start=index_date --cox_stop=end_date_outcome --study_start=2021-06-01
-      --study_stop=2021-12-14 --cut_points=1;28;197 --controls_per_case=20 --total_event_threshold=50
-      --episode_event_threshold=5 --covariate_threshold=5 --age_spline=TRUE --save_analysis_ready=TRUE
-      --run_analysis=FALSE --df_output=model_output-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting.csv
-    needs:
-    - make_model_input-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting
-    outputs:
-      highly_sensitive:
-        ready: output/ready-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting.csv.gz
-
-  stata_cox_ipw-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting:
-    run: stata-mp:latest analysis/cox_model.do cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting
-      TRUE
-    needs:
-    - ready-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting
-    outputs:
-      moderately_sensitive:
-        stata_fup: output/stata_fup-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting.csv
-        stata_model_output: output/stata_model_output-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting.txt
-
   ## Make Table 1 
   ## Table 1 - prevax pre_existing_condition TRUE covid_history TRUE 
 
@@ -7913,6 +7889,7 @@ actions:
     - cox_ipw-cohort_unvax-sub_ethnicity_other-pneumonia-no_preexisting
     - cox_ipw-cohort_unvax-sub_ethnicity_other-pneumonia-preexisting
     - cox_ipw-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-no_preexisting
+    - cox_ipw-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting
     - cox_ipw-cohort_vax-sub_ethnicity_other-asthma-no_preexisting
     - cox_ipw-cohort_vax-sub_ethnicity_other-copd-no_preexisting
     - cox_ipw-cohort_vax-sub_ethnicity_other-pneumonia-no_preexisting
@@ -8046,7 +8023,6 @@ actions:
     - stata_cox_ipw-cohort_unvax-sub_ethnicity_asian-pneumonia-no_preexisting
     - stata_cox_ipw-cohort_prevax-sub_ethnicity_mixed-pneumonia-no_preexisting
     - stata_cox_ipw-cohort_prevax-sub_ethnicity_other-pneumonia-no_preexisting
-    - stata_cox_ipw-cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting
     outputs:
       moderately_sensitive:
         stata_model_output: output/stata_model_output.csv
