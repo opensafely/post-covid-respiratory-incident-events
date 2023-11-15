@@ -35,8 +35,9 @@ run_stata <- c("cohort_prevax-sub_age_60_79-pneumonia-no_preexisting",
                "cohort_vax-sub_covid_hospitalised-pneumonia-preexisting",
                "cohort_vax-sub_covid_hospitalised-pneumonia-no_preexisting",
                "cohort_prevax-sub_ethnicity_mixed-pneumonia-no_preexisting",
-               "cohort_prevax-sub_ethnicity_other-pneumonia-no_preexisting",
-               "cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting")
+               "cohort_prevax-sub_ethnicity_other-pneumonia-no_preexisting"#,
+#               "cohort_unvax-sub_ethnicity_other-pulmonary_fibrosis-preexisting"
+                )
 
 stata <- active_analyses[active_analyses$name %in% run_stata,]
 stata$save_analysis_ready <- TRUE
