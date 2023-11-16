@@ -156,4 +156,4 @@ df <- dplyr::rename(df,
 # Save model output ------------------------------------------------------------
 print('Save model output')
 
-readr::write_csv(df, "output/stata_model_output_rounded.csv")
+readr::write_csv(df, "output/stata_model_output_midpoint6.csv")
