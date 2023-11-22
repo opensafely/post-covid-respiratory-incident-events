@@ -14,3 +14,4 @@ venv/
 .Rproj.user*
 .Rproj.user
 .RData
+analysis/specify_paths.R
