@@ -1,7 +1,7 @@
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-df <- readr::read_csv(path_model_output,
+df <- readr::read_csv("output/plot_model_output.csv",
                       show_col_types = FALSE)
 
 # Define population ------------------------------------------------------------

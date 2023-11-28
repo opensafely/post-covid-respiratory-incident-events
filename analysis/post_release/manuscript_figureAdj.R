@@ -1,7 +1,7 @@
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-df <- readr::read_csv(path_model_output,
+df <- readr::read_csv("output/plot_model_output.csv",
                       show_col_types = FALSE)
 
 # Filter data ------------------------------------------------------------------
@@ -43,7 +43,7 @@ for (i in c("preexisting","no_preexisting")) {
   # Plot data --------------------------------------------------------------------
   print("Plot data")
   
-  ggplot2::ggplot(data = df_plot,
+  ggplot2::ggplot(data = df_plot[df_plot$term!="days0_1",],
                   mapping = ggplot2::aes(x = outcome_time_median, y = hr, color = cohort)) +
     ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = 1), colour = "#A9A9A9") +
     ggplot2::geom_point(position = ggplot2::position_dodge(width = 0)) +
