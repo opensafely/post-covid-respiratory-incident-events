@@ -1,5 +1,7 @@
 # post-covid-respiratory
 
+This repository is no longer used. The contents has been incorporated into the [opensafely/post-covid-respiratory](https://github.com/opensafely/post-covid-respiratory) repository.
+
 [View on OpenSAFELY](https://jobs.opensafely.org/repo/https%253A%252F%252Fgithub.com%252Fopensafely%252Fpost-covid-respiratory)
 
 Details of the purpose and any published outputs from this project can be found at the link above.
